@@ -37,60 +37,71 @@ tvy_anio = tv_y.groupby(["date_added"],as_index=False).count().drop("show_id",ax
 tvy7_anio = tv_y7.groupby(["date_added"],as_index=False).count().drop("show_id",axis=1)
 
 
-##Se hace la regresion lineal para g
-print(g_anio)
-
-regresion = linear_model.LinearRegression()
-#se hace implementa la regresion
-regresion.fit(g_anio["date_added"].values.reshape(-1,1),g_anio["rating"]) 
-#se ahce la prediccion
-prediccion_g_anio = regresion.predict(g_anio["date_added"].values.reshape(-1,1))
-
-g_anio.insert(0,"pred",prediccion_g_anio)
-
-print(g_anio)
-
-prediccion = regresion.predict(X=[[2022]])
-#se saca el error
-error = regresion.score(g_anio["date_added"].values.reshape(-1,1),g_anio["rating"])
-#se saca los datos 
-print(regresion.__dict__)
-print(error)
-#prediccion
-print(prediccion)
-#se grafica
-sns.regplot(x="date_added", y="rating", data=g_anio)
-plt.show()
-
-  
-"""
-Nuestro modelo explica un 38% de la variabilidad original del total de accidentes...
-
-Por cada año que aumente el estado, el número de raiting incrementará en 1.03
-"""
 
 
+def prediccionRating(df):
+
+    ##Se hace la regresion lineal para g
+    print(df)
+
+    regresion = linear_model.LinearRegression()
+    #se hace implementa la regresion
+    regresion.fit(df["date_added"].values.reshape(-1,1),df["rating"]) 
+    #se ahce la prediccion
+    prediccion_df = regresion.predict(df["date_added"].values.reshape(-1,1))
+
+    df.insert(0,"pred",prediccion_df)
+
+    print(df)
+
+    prediccion = regresion.predict(X=[[2022]])
+    #se saca el error
+    error = regresion.score(df["date_added"].values.reshape(-1,1),df["rating"])
+    error = error*100
+    #se saca los datos 
+    #print(regresion.__dict__)
+    print("Por cada año que aumente el estado, el número de raiting incrementará en: " + str(regresion.__dict__.get("coef_")))
+    
+    print("Nuestro modelo explica un " + str(error) + "% de la variabilidad original del total de rating ")
+    #prediccion
+    print("Prediccion en el 2022: " + str(prediccion))
+    #se grafica
+    sns.regplot(x="date_added", y="rating", data=df)
+    plt.show()
+
+    
+    """
+    Nuestro modelo explica un 38% de la variabilidad original del total de accidentes...
+
+    Por cada año que aumente el estado, el número de raiting incrementará en 1.03
+    """
 
 
 
-#sacar regresion lineal para cada categoria
 
 
-#print(g)
-#agrupacion por año
-
-dates = df.date_added.unique()
-#print(dates)
+    #sacar regresion lineal para cada categoria
 
 
-group_date = df.groupby(["date_added","rating"]).count()
+    #print(g)
+    #agrupacion por año
 
-#print(group_date.loc[2019.0])
-#print(pg13)
-
-#sacar por año la cantidad de peliculas o series cada rating
-
-#2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021
+    #dates = df.date_added.unique()
+    #print(dates)
 
 
-#crear dataframe con dos columnas para cada rating con año y cantidad de peliculas.
+    #group_date = df.groupby(["date_added","rating"]).count()
+
+    #print(group_date.loc[2019.0])
+    #print(pg13)
+
+    #sacar por año la cantidad de peliculas o series cada rating
+
+    #2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021
+
+
+    #crear dataframe con dos columnas para cada rating con año y cantidad de peliculas.
+    
+    
+prediccionRating(g_anio)
+#prediccionRating(pg_anio)
