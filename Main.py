@@ -44,12 +44,19 @@ regresion = linear_model.LinearRegression()
 #se hace implementa la regresion
 regresion.fit(g_anio["date_added"].values.reshape(-1,1),g_anio["rating"]) 
 #se ahce la prediccion
+prediccion_g_anio = regresion.predict(g_anio["date_added"].values.reshape(-1,1))
+
+g_anio.insert(0,"pred",prediccion_g_anio)
+
+print(g_anio)
+
 prediccion = regresion.predict(X=[[2022]])
 #se saca el error
 error = regresion.score(g_anio["date_added"].values.reshape(-1,1),g_anio["rating"])
 #se saca los datos 
 print(regresion.__dict__)
 print(error)
+#prediccion
 print(prediccion)
 #se grafica
 sns.regplot(x="date_added", y="rating", data=g_anio)
