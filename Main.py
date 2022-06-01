@@ -68,11 +68,11 @@ def prediccionRating(df,title):
     #print(regresion.__dict__)
    
     print("----------------------------------------------"+title+"----------------------------------------------")
-    print("Por cada año que aumente el estado, el número de raiting incrementará en: " + str(regresion.__dict__.get("coef_")))
+    print("Por cada año que aumente el estado, el número de raiting incrementará en: " + str(regresion.__dict__.get("coef_").round(2)))
     
-    print("Nuestro modelo explica un " + str(error) + "% de la variabilidad original del total de rating ")
+    print("Nuestro modelo explica un " + str(error.round(2)) + "% de la variabilidad original del total de rating ")
     #prediccion
-    print("Prediccion en el 2022: " + str(prediccion))
+    print("Prediccion en el 2022: " + str(prediccion.round(2)))
     #se grafica
     
     #tabla
