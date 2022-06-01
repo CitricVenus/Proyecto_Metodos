@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 
 
-
+anio = 2030
 df = pd.read_csv('netflix_titles.csv', usecols=('show_id', 'date_added', 'rating'))
 df['date_added'] = pd.DatetimeIndex(pd.to_datetime(df['date_added'])).year
 #year = pd.DatetimeIndex(pd.to_datetime(df['date_added'])).year
@@ -42,7 +42,7 @@ tvy7_anio = tv_y7.groupby(["date_added"],as_index=False).count().drop("show_id",
 
 
 
-def prediccionRating(df,title):
+def prediccionRating(df,title,anio):
     fig, axs = plt.subplots(1, 2)
     ##Se hace la regresion lineal para g
     df.rename(columns={"rating":"Total"},inplace=True)
@@ -59,7 +59,7 @@ def prediccionRating(df,title):
     
     #print(df)
 
-    prediccion = regresion.predict(X=[[2022]])
+    prediccion = regresion.predict(X=[[anio]])
     
     #se saca el error
     error = regresion.score(df["date_added"].values.reshape(-1,1),df["Total"])
@@ -72,7 +72,7 @@ def prediccionRating(df,title):
     
     print("Nuestro modelo explica un " + str(error.round(2)) + "% de la variabilidad original del total de rating ")
     #prediccion
-    print("Prediccion en el 2022: " + str(prediccion.round(2)))
+    print("Prediccion en el " + str(anio) +" : " + str(prediccion.round(2)))
     #se grafica
     
     #tabla
@@ -83,7 +83,7 @@ def prediccionRating(df,title):
     table = axs[1].table(cellText=df.values.round(2),colLabels=df.columns,loc="center")
     table.auto_set_font_size(False)
     table.set_fontsize(10)
-    plt.title(title)
+    plt.title(title + str(anio) + "=" + str(prediccion.round(2)))
     
     
     #grafica
@@ -122,13 +122,13 @@ def prediccionRating(df,title):
     #crear dataframe con dos columnas para cada rating con año y cantidad de peliculas.
     
 
-prediccionRating(g_anio,"Rating G")
-prediccionRating(pg_anio,"Rating PG")
-prediccionRating(pg13_anio,"Rating PG-13")
-prediccionRating(r_anio,"Rating R")
-prediccionRating(tv14_anio,"Rating TV-14")
-prediccionRating(tvg_anio,"Rating TV-G")
-prediccionRating(tvma_anio,"Rating TV-MA")
-prediccionRating(tvpg_anio,"Rating TV-PG")
-prediccionRating(tvy_anio,"Rating TV-Y")
-prediccionRating(tvy7_anio,"Rating TV-Y7")
+prediccionRating(g_anio,"Rating G",anio)
+prediccionRating(pg_anio,"Rating PG",anio)
+prediccionRating(pg13_anio,"Rating PG-13",anio)
+prediccionRating(r_anio,"Rating R",anio)
+prediccionRating(tv14_anio,"Rating TV-14",anio)
+prediccionRating(tvg_anio,"Rating TV-G",anio)
+prediccionRating(tvma_anio,"Rating TV-MA",anio)
+prediccionRating(tvpg_anio,"Rating TV-PG",anio)
+prediccionRating(tvy_anio,"Rating TV-Y",anio)
+prediccionRating(tvy7_anio,"Rating TV-Y7",anio)
