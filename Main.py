@@ -56,9 +56,11 @@ def prediccionRating(df,title):
 
     #df.insert(0,"pred",prediccion_df)
     df["prediction"] = prediccion_df
+    
     #print(df)
 
     prediccion = regresion.predict(X=[[2022]])
+    
     #se saca el error
     error = regresion.score(df["date_added"].values.reshape(-1,1),df["Total"])
     error = error*100
@@ -78,7 +80,7 @@ def prediccionRating(df,title):
     axs[1].axis('off') 
     axs[1].axis('tight')
     
-    table = axs[1].table(cellText=df.values,colLabels=df.columns,loc="center")
+    table = axs[1].table(cellText=df.values.round(2),colLabels=df.columns,loc="center")
     table.auto_set_font_size(False)
     table.set_fontsize(10)
     plt.title(title)
