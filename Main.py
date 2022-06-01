@@ -5,6 +5,9 @@ from sklearn import linear_model
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+
+
+
 df = pd.read_csv('netflix_titles.csv', usecols=('show_id', 'date_added', 'rating'))
 df['date_added'] = pd.DatetimeIndex(pd.to_datetime(df['date_added'])).year
 #year = pd.DatetimeIndex(pd.to_datetime(df['date_added'])).year
@@ -39,42 +42,56 @@ tvy7_anio = tv_y7.groupby(["date_added"],as_index=False).count().drop("show_id",
 
 
 
-def prediccionRating(df):
-
+def prediccionRating(df,title):
+    fig, axs = plt.subplots(1, 2)
     ##Se hace la regresion lineal para g
-    print(df)
+    df.rename(columns={"rating":"Total"},inplace=True)
+    #print(df)
 
     regresion = linear_model.LinearRegression()
     #se hace implementa la regresion
-    regresion.fit(df["date_added"].values.reshape(-1,1),df["rating"]) 
+    regresion.fit(df["date_added"].values.reshape(-1,1),df["Total"]) 
     #se ahce la prediccion
     prediccion_df = regresion.predict(df["date_added"].values.reshape(-1,1))
 
-    df.insert(0,"pred",prediccion_df)
-
-    print(df)
+    #df.insert(0,"pred",prediccion_df)
+    df["prediction"] = prediccion_df
+    #print(df)
 
     prediccion = regresion.predict(X=[[2022]])
     #se saca el error
-    error = regresion.score(df["date_added"].values.reshape(-1,1),df["rating"])
+    error = regresion.score(df["date_added"].values.reshape(-1,1),df["Total"])
     error = error*100
     #se saca los datos 
     #print(regresion.__dict__)
+   
+    print("----------------------------------------------"+title+"----------------------------------------------")
     print("Por cada año que aumente el estado, el número de raiting incrementará en: " + str(regresion.__dict__.get("coef_")))
     
     print("Nuestro modelo explica un " + str(error) + "% de la variabilidad original del total de rating ")
     #prediccion
     print("Prediccion en el 2022: " + str(prediccion))
     #se grafica
-    sns.regplot(x="date_added", y="rating", data=df)
+    
+    #tabla
+    fig.patch.set_visible(False)
+    axs[1].axis('off') 
+    axs[1].axis('tight')
+    
+    table = axs[1].table(cellText=df.values,colLabels=df.columns,loc="center")
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    plt.title(title)
+    
+    
+    #grafica
+    #fig.tight_layout()
+    sns.regplot(x="date_added", y="Total", data=df,ax=axs[0])
+    plt.title(title)
+    
     plt.show()
 
-    
-    """
-    Nuestro modelo explica un 38% de la variabilidad original del total de accidentes...
-
-    Por cada año que aumente el estado, el número de raiting incrementará en 1.03
-    """
+ 
 
 
 
@@ -102,6 +119,14 @@ def prediccionRating(df):
 
     #crear dataframe con dos columnas para cada rating con año y cantidad de peliculas.
     
-    
-prediccionRating(g_anio)
-#prediccionRating(pg_anio)
+
+prediccionRating(g_anio,"Rating G")
+prediccionRating(pg_anio,"Rating PG")
+prediccionRating(pg13_anio,"Rating PG-13")
+prediccionRating(r_anio,"Rating R")
+prediccionRating(tv14_anio,"Rating TV-14")
+prediccionRating(tvg_anio,"Rating TV-G")
+prediccionRating(tvma_anio,"Rating TV-MA")
+prediccionRating(tvpg_anio,"Rating TV-PG")
+prediccionRating(tvy_anio,"Rating TV-Y")
+prediccionRating(tvy7_anio,"Rating TV-Y7")
