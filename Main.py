@@ -141,5 +141,5 @@ def menorContenido():
 
 mayorContenido()
 menorContenido()
-print("-------------------------------Total de contenido de Netflix en "+str(anio)+"---------------------------------------")
+print("-------------------------------Total de contenido de Netflix en "+str(anio)+" para niños, adolescentes y adultos ---------------------------------------")
 print(str(suma_total[0].round(2)))
