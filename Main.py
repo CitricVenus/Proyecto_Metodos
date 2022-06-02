@@ -23,13 +23,9 @@ suma_ninos = 0
 suma_adolescentes = 0
 suma_adultos = 0
 suma_total = 0
-
 anio = 2022
 df = pd.read_csv('netflix_titles.csv', usecols=('show_id', 'date_added', 'rating'))
 df['date_added'] = pd.DatetimeIndex(pd.to_datetime(df['date_added'])).year
-#year = pd.DatetimeIndex(pd.to_datetime(df['date_added'])).year
-#print(df)
-#print(df.loc[:,['show_id', 'year_added', 'rating']])
 
 #agrupaciones por rating
 g = df.loc[df["rating"]=="G"]
@@ -59,78 +55,47 @@ nc17_anio = nc_17.groupby(["date_added"],as_index=False).count().drop("show_id",
 
 def prediccionRating(df,title,anio):
     fig, axs = plt.subplots(1, 2)
-    ##Se hace la regresion lineal para g
-    df.rename(columns={"rating":"Total"},inplace=True)
-    #print(df)
-
-    regresion = linear_model.LinearRegression()
-    #se hace implementa la regresion
-    regresion.fit(df["date_added"].values.reshape(-1,1),df["Total"]) 
-    #se ahce la prediccion
-    prediccion_df = regresion.predict(df["date_added"].values.reshape(-1,1))
-
-    #df.insert(0,"pred",prediccion_df)
-    df["prediction"] = prediccion_df
     
-    #print(df)
+    ##Se hace la regresion lineal para el rating del df seleccionado
+    df.rename(columns={"rating":"Total"},inplace=True)
+    regresion = linear_model.LinearRegression()
 
+    #se implementa la regresion
+    regresion.fit(df["date_added"].values.reshape(-1,1),df["Total"]) 
+
+    #se hace la prediccion
+    prediccion_df = regresion.predict(df["date_added"].values.reshape(-1,1))
+    df["prediction"] = prediccion_df
     prediccion = regresion.predict(X=[[anio]])
     
     #se saca el error
     error = regresion.score(df["date_added"].values.reshape(-1,1),df["Total"])
     error = error*100
-    #se saca los datos 
-    #print(regresion.__dict__)
-   
+
+    #se sacan los datos 
     print("----------------------------------------------"+title+"----------------------------------------------")
     print("Por cada año que aumente el estado, el número de raiting incrementará en: " + str(regresion.__dict__.get("coef_")[0].round(2)))
-    
     print("Nuestro modelo explica un " + str(error.round(2)) + "% de la variabilidad original del total de rating ")
     #prediccion
     print("Prediccion en el " + str(anio) +" : " + str(prediccion[0].round(2)))
     #desviación estándar
     print("La desviación estándar de los datos es: " + str(round(stat.pstdev(df['Total']), 2)))
-    #se grafica
     
+    #se grafica
     #tabla
     fig.patch.set_visible(False)
     axs[1].axis('off') 
     axs[1].axis('tight')
-    
     table = axs[1].table(cellText=df.values.round(2),colLabels=df.columns,loc="center")
     table.auto_set_font_size(False)
     table.set_fontsize(10)
     plt.title(title + str(anio) + "=" + str(prediccion.round(2)))
     
     #grafica
-    #fig.tight_layout()
     sns.regplot(x="date_added", y="Total", data=df,ax=axs[0])
     plt.title(title)
-    
     plt.show()
     return prediccion.round(2)
- 
-    #sacar regresion lineal para cada categoria
-
-
-    #print(g)
-    #agrupacion por año
-
-    #dates = df.date_added.unique()
-    #print(dates)
-
-
-    #group_date = df.groupby(["date_added","rating"]).count()
-
-    #print(group_date.loc[2019.0])
-    #print(pg13)
-
-    #sacar por año la cantidad de peliculas o series cada rating
-
-    #2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021
-
-
-    #crear dataframe con dos columnas para cada rating con año y cantidad de peliculas.
     
 
 prediction_G = prediccionRating(g_anio,"Rating G",anio)
@@ -146,17 +111,15 @@ prediction_TVY7 = prediccionRating(tvy7_anio,"Rating TV-Y7",anio)
 prediction_NC17 = prediccionRating(nc17_anio,"Rating NC-17",anio)
 
 suma_ninos = prediction_TVY + prediction_TVY7 + prediction_G + prediction_TVG + prediction_PG + prediction_TVPG
-
 suma_adolescentes = prediction_PG13 + prediction_TV14
-
 suma_adultos = prediction_R + prediction_TVMA + prediction_NC17
-
 suma_total = suma_ninos + suma_adolescentes + suma_adultos
 
 print("-----------------------------Resultados finales------------------------------")
 print("Niños = " + str(suma_ninos[0].round(2)))
 print("Adolescentes = " + str(suma_adolescentes[0].round(2)))
 print("Adultos = " + str(suma_adultos[0].round(2)))
+
 
 def mayorContenido():
     if suma_ninos>suma_adolescentes and suma_ninos>suma_adultos:
@@ -165,6 +128,7 @@ def mayorContenido():
         print("En el año " + str(anio) + " la audiencia con mayor contenido en Netflix es Adolescentes" )
     if suma_adultos>suma_ninos and suma_adultos>suma_adolescentes:
         print("En el año " + str(anio) + " la audiencia con mayor contenido en Netflix es Adultos" )
+
 
 def menorContenido():
     if suma_ninos<suma_adolescentes and suma_ninos<suma_adultos:
