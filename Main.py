@@ -163,9 +163,9 @@ suma_adultos = prediction_R + prediction_TVMA + prediction_NC17
 suma_total = suma_ninos + suma_adolescentes + suma_adultos
 
 print("-----------------------------Resultados finales------------------------------")
-print("Niños = " + str(suma_ninos))
-print("Adolescentes = " + str(suma_adolescentes))
-print("Adultos = " + str(suma_adultos))
+print("Niños = " + str(suma_ninos[0].round(2)))
+print("Adolescentes = " + str(suma_adolescentes[0].round(2)))
+print("Adultos = " + str(suma_adultos[0].round(2)))
 
 def mayorContenido():
     if suma_ninos>suma_adolescentes and suma_ninos>suma_adultos:
@@ -188,5 +188,5 @@ def menorContenido():
 mayorContenido()
 menorContenido()
 print("-------------------------------Total de contenido de Netflix en "+str(anio)+"---------------------------------------")
-print(str(suma_total))
+print(str(suma_total[0].round(2)))
 
