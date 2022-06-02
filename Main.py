@@ -4,7 +4,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
 import seaborn as sns
 import matplotlib.pyplot as plt
-
+import statistics as stat
 
 
 anio = 2030
@@ -68,11 +68,13 @@ def prediccionRating(df,title,anio):
     #print(regresion.__dict__)
    
     print("----------------------------------------------"+title+"----------------------------------------------")
-    print("Por cada año que aumente el estado, el número de raiting incrementará en: " + str(regresion.__dict__.get("coef_").round(2)))
+    print("Por cada año que aumente el estado, el número de raiting incrementará en: " + str(regresion.__dict__.get("coef_")[0].round(2)))
     
     print("Nuestro modelo explica un " + str(error.round(2)) + "% de la variabilidad original del total de rating ")
     #prediccion
-    print("Prediccion en el " + str(anio) +" : " + str(prediccion.round(2)))
+    print("Prediccion en el " + str(anio) +" : " + str(prediccion[0].round(2)))
+    #desviación estándar
+    print("La desviación estándar de los datos es: " + str(round(stat.pstdev(df['Total']), 2)))
     #se grafica
     
     #tabla
