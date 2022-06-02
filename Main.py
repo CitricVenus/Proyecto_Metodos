@@ -7,6 +7,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import statistics as stat
 
+
 prediction_G = 0
 prediction_PG = 0
 prediction_PG13 = 0
@@ -30,7 +31,6 @@ df['date_added'] = pd.DatetimeIndex(pd.to_datetime(df['date_added'])).year
 #print(df)
 #print(df.loc[:,['show_id', 'year_added', 'rating']])
 
-
 #agrupaciones por rating
 g = df.loc[df["rating"]=="G"]
 pg = df.loc[df["rating"]=="PG"]
@@ -44,7 +44,6 @@ tv_y = df.loc[df["rating"]=="TV-Y"]
 tv_y7 = df.loc[df["rating"]=="TV-Y7"]
 nc_17 = df.loc[df["rating"]=="NC-17"]
 
-
 g_anio = g.groupby(["date_added"],as_index=False).count().drop("show_id",axis=1)
 pg_anio = pg.groupby(["date_added"],as_index=False).count().drop("show_id",axis=1)
 pg13_anio = pg_13.groupby(["date_added"],as_index=False).count().drop("show_id",axis=1)
@@ -56,8 +55,6 @@ tvpg_anio = tv_pg.groupby(["date_added"],as_index=False).count().drop("show_id",
 tvy_anio = tv_y.groupby(["date_added"],as_index=False).count().drop("show_id",axis=1)
 tvy7_anio = tv_y7.groupby(["date_added"],as_index=False).count().drop("show_id",axis=1)
 nc17_anio = nc_17.groupby(["date_added"],as_index=False).count().drop("show_id",axis=1)
-
-
 
 
 def prediccionRating(df,title,anio):
@@ -105,7 +102,6 @@ def prediccionRating(df,title,anio):
     table.set_fontsize(10)
     plt.title(title + str(anio) + "=" + str(prediccion.round(2)))
     
-    
     #grafica
     #fig.tight_layout()
     sns.regplot(x="date_added", y="Total", data=df,ax=axs[0])
@@ -114,11 +110,6 @@ def prediccionRating(df,title,anio):
     plt.show()
     return prediccion.round(2)
  
-
-
-
-
-
     #sacar regresion lineal para cada categoria
 
 
@@ -184,9 +175,7 @@ def menorContenido():
         print("En el año " + str(anio) + " la audiencia con menor contenido en Netflix es Adultos" )
 
 
-
 mayorContenido()
 menorContenido()
 print("-------------------------------Total de contenido de Netflix en "+str(anio)+"---------------------------------------")
 print(str(suma_total[0].round(2)))
-
